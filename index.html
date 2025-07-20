@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Malla Curricular Interactiva</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f5f7fa;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .malla {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 10px;
+    }
+    .semestre {
+      background: #0077cc;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+    .ramo {
+      background: white;
+      border-radius: 5px;
+      padding: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+      position: relative;
+      border-left: 5px solid #0077cc;
+    }
+    .ramo:hover {
+      background: #e0f0ff;
+    }
+    .tooltip {
+      position: absolute;
+      background: #333;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      display: none;
+      z-index: 10;
+      top: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Malla Curricular Ingeniería Civil Industrial</h1>
+  <div class="malla" id="malla"></div>
+
+  <script>
+    const ramos = [
+      {codigo: 'MAT101', nombre: 'Matemáticas I', semestre: 1, prereq: []},
+      {codigo: 'FIS101', nombre: 'Física I', semestre: 1, prereq: []},
+      {codigo: 'MAT102', nombre: 'Matemáticas II', semestre: 2, prereq: ['MAT101']},
+      {codigo: 'FIS102', nombre: 'Física II', semestre: 2, prereq: ['FIS101']},
+      {codigo: 'PROG101', nombre: 'Programación', semestre: 2, prereq: []},
+      {codigo: 'MAT201', nombre: 'Matemáticas III', semestre: 3, prereq: ['MAT102']},
+      {codigo: 'ECO101', nombre: 'Economía', semestre: 3, prereq: []},
+      {codigo: 'EST101', nombre: 'Estadística', semestre: 3, prereq: ['MAT102']},
+      {codigo: 'IND101', nombre: 'Ingeniería Industrial', semestre: 4, prereq: ['MAT201','EST101']},
+    ];
+
+    const mallaDiv = document.getElementById('malla');
+
+    // Crear columnas de semestres
+    for(let i=1; i<=8; i++){
+      const semestreDiv = document.createElement('div');
+      semestreDiv.className = 'semestre';
+      semestreDiv.textContent = `Semestre ${i}`;
+      mallaDiv.appendChild(semestreDiv);
+    }
+
+    // Crear los ramos y ubicarlos en su semestre
+    ramos.forEach(ramo => {
+      const ramoDiv = document.createElement('div');
+      ramoDiv.className = 'ramo';
+      ramoDiv.textContent = `${ramo.codigo}: ${ramo.nombre}`;
+      ramoDiv.style.gridColumnStart = ramo.semestre;
+
+      // Tooltip para prerrequisitos
+      const tooltip = document.createElement('div');
+      tooltip.className = 'tooltip';
+      tooltip.textContent = ramo.prereq.length > 0
+        ? 'Prerrequisitos: ' + ramo.prereq.join(', ')
+        : 'Prerrequisitos: Ninguno';
+
+      ramoDiv.appendChild(tooltip);
+
+      // Mostrar/ocultar tooltip al pasar mouse
+      ramoDiv.addEventListener('mouseenter', () => { tooltip.style.display = 'block'; });
+      ramoDiv.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+
+      mallaDiv.appendChild(ramoDiv);
+    });
+  </script>
+</body>
+</html>
+
